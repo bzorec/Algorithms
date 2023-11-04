@@ -6,47 +6,9 @@
 #include <algorithm>
 #include "Stand.h"
 
-bool checkX(Stand *firstStand, Stand *secondStand, int x) {
-    auto first = *firstStand;
-    auto second = *secondStand;
+bool checkX(Stand *firstStand, Stand *secondStand, int x);
 
-    first.trim(x);
-    second.trim(x);
-
-    bool isValidFirstStand;
-    bool isValidSecondStand;
-
-    if (!first.anyWeights() && !second.anyWeights()) {
-        return true;
-    }
-
-    isValidFirstStand = first.arePairsValid();
-    isValidSecondStand = second.arePairsValid();
-
-    return isValidFirstStand && isValidSecondStand;
-}
-
-int bisect(Stand *firstStand, Stand *secondStand, int a, int b) {
-    while (b - a > 1) {
-        int x = (a + b) / 2;
-
-        bool fa = checkX(firstStand, secondStand, a);
-        bool fb = checkX(firstStand, secondStand, b);
-        bool fx = checkX(firstStand, secondStand, x);
-
-        if (!fa && fb && fx) {
-            b = x;
-        } else if (!fa && !fx && fb) {
-            a = x;
-            firstStand->trim(x);
-            secondStand->trim(x);
-        } else {
-            break;
-        }
-    }
-
-    return b;
-}
+int bisect(Stand *firstStand, Stand *secondStand, int a, int b);
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -97,4 +59,40 @@ int main(int argc, char **argv) {
 
     file.close();
     return 0;
+}
+
+bool checkX(Stand *firstStand, Stand *secondStand, int x) {
+    auto first = *firstStand;
+    auto second = *secondStand;
+
+    first.trim(x);
+    second.trim(x);
+
+    if (!first.anyWeights() && !second.anyWeights()) {
+        return true;
+    }
+
+    return first.arePairsValid() && second.arePairsValid();
+}
+
+int bisect(Stand *firstStand, Stand *secondStand, int a, int b) {
+    while (b - a > 1) {
+        int x = (a + b) / 2;
+
+        bool fa = checkX(firstStand, secondStand, a);
+        bool fb = checkX(firstStand, secondStand, b);
+        bool fx = checkX(firstStand, secondStand, x);
+
+        if (!fa && fb && fx) {
+            b = x;
+        } else if (!fa && !fx && fb) {
+            a = x;
+            firstStand->trim(x);
+            secondStand->trim(x);
+        } else {
+            break;
+        }
+    }
+
+    return b;
 }
