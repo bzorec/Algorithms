@@ -1,0 +1,3 @@
+D:/workspace/uni_workspace/vaja3/cmake-build-debug/CMakeFiles/vaja3.dir
+D:/workspace/uni_workspace/vaja3/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/workspace/uni_workspace/vaja3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
