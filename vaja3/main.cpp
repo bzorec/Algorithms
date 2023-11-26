@@ -2,7 +2,6 @@
 #include <fstream>
 #include <set>
 #include <vector>
-#include <chrono>
 
 using namespace std;
 
@@ -50,8 +49,6 @@ int main(int argc, char *argv[]) {
 
     int maxDrop = 0;
 
-    auto start = std::chrono::high_resolution_clock::now();
-
     vector<int> maxDropValues;
 
     for (size_t i = 0; i < changes; i++) {
@@ -78,11 +75,6 @@ int main(int argc, char *argv[]) {
     for (const auto &value: maxDropValues) {
         cout << value << std::endl;
     }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    std::cout << "Execution time: " << duration.count() / 1000000.0l << " seconds" << std::endl;
 
     return 0;
 }
