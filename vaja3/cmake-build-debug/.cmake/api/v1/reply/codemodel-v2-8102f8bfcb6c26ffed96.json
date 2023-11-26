@@ -9,7 +9,7 @@
 					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.27"
+						"string" : "3.26.4"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/workspace/uni_workspace/vaja3/cmake-build-debug",
-		"source" : "D:/workspace/uni_workspace/vaja3"
+		"build" : "C:/workspace/faculty/Algorithms/vaja3/cmake-build-debug",
+		"source" : "C:/workspace/faculty/Algorithms/vaja3"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 5
 	}
 }
