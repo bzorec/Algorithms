@@ -11,59 +11,46 @@ struct Island {
     long long t;
 };
 
-vector<long long> minSumPath(const vector<Island>&islands, int n, int m, const int k) {
+vector<long long> minSumPath(const vector<Island>& islands, int n, int m, const int k) {
     // Create a 2D table to store intermediate results
     vector<vector<long long>> dp(n + 1, vector<long long>(k + 1, INT_MAX));
 
-
-    for (int i = 0; i < k; i++) {
-        for (int j = 0; j < k; j++) {
-            dp[i][j] = INT_MAX;
-        }
-    }
-
     dp[0][0] = 0;
-
-    // TODO fix the movment checks not calculation the moves correctly
+    
     // Fill the table using tabulation
     for (int i = 1; i <= n; ++i) {
         for (int j = 0; j <= k; ++j) {
-            // Option 1: Enter a new row in column y=1
+            // Option 1: Move forward
             auto val1 = dp[i][j];
-            auto val2 = dp[i - 1][j] + 1 + islands[i - 1].t;
+            auto val2 = (i == 1) ? islands[i - 1].y - i + islands[i - 1].t : dp[i - 1][j] + 1 + islands[i - 1].t;
             dp[i][j] = min(val1, val2);
 
-            // Option 2: Enter the next row again in column y=1
+            // Option 2: Move backward
             if (j > 0) {
                 auto val1 = dp[i][j];
-                auto val2 = dp[i][j - 1] + 1 + islands[i].y - islands[i - 1].y + islands[i - 1].t;
+                auto val2 = dp[i][j - 1] + (abs(islands[i].y - islands[i - 1].y) + 1) + islands[i - 1].t;
                 dp[i][j] = min(val1, val2);
             }
 
-            // Option 3: Enter the next row in the column y=M
-            if (j > 0) {
+            // Option 3: Move upward if in the first or last column
+            if (j > 0 && (i == 1 || i == n)) {
                 auto val1 = dp[i][j];
-                auto val2 = dp[i - 1][j - 1] + 1 + islands[i - 1].y + islands[i - 1].t;
+                auto val2 = dp[i - 1][j - 1] + (abs(islands[i - 1].y - islands[i].y) + 1) + islands[i - 1].t;
                 dp[i][j] = min(val1, val2);
             }
-
-            // Option 4: Enter the new row in the column y=M
-            val1 = dp[i][j];
-            val2 = dp[i - 1][j] + 1 + islands[i].y + islands[i - 1].t;
-            dp[i][j] = min(val1, val2);
         }
     }
 
-    // Extract the result from the last row of the table
-    vector<long long> resultPath(k + 1);
-    for (int i = 0; i < k; i++) {
-        resultPath[i] = INT_MAX;
-    }
 
-    // TODO fix the result how to put into the new array
-    for (int j = 0; j <= k; ++j) {
-        auto result = (dp[n][j]);
-        resultPath[j] = result;
+    // Extract the result from the last row of the table
+    vector<long long> resultPath(k);
+
+    for (int j = 0; j < k; ++j) {
+        long long minTime = INT_MAX;
+        for (int i = 0; i <= n; ++i) {
+            minTime = min(minTime, dp[j][i]);
+        }
+        resultPath[j] = minTime;
     }
 
     return resultPath;
