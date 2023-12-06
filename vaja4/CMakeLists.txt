@@ -3,4 +3,5 @@ project(vaja4)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(vaja4 main.cpp)
+add_executable(vaja4 main.cpp
+)
