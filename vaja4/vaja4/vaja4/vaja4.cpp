@@ -20,7 +20,7 @@ int abs_diff(const int x, const int y)
 vector<long long> min_sum_path(const vector<island>& islands, const int n, const int m, const int k)
 {
 	// Create a 2D table to store intermediate results
-	vector dp(k + 1, vector<long long>(k + 1, LLONG_MAX - 1));
+	vector dp(k + 1, vector<long long>(k + 1, INT32_MAX - 1));
 
 	dp[0][0] = 0;
 
@@ -49,26 +49,30 @@ vector<long long> min_sum_path(const vector<island>& islands, const int n, const
 				auto right3 = dp[i - 1][j - 1] + (abs_diff(islands[i - 1].y, islands[i].y) + 1) + islands[i - 1].t;
 				dp[i][j] = min(left3, right3);
 			}
-
-			// Initialize the first column of the dp table to 0
-			for (int l = 1; l <= k; ++l)
-			{
-				dp[0][l] = 0;
-			}
 		}
 	}
 
 	// Extract the result path
-	vector<long long> result_path(k + 1);
+	vector<long long> result_path(k);
 
-	for (int j = 0; j < k; ++j)
+	for (int j = 1; j <= k; ++j) // Change here
 	{
-		long long min_time = INT_MAX;
+		long long min_time = INT32_MAX; // Change here
 		for (int i = 0; i <= n; ++i)
 		{
-			min_time = min(min_time, dp[j][i]);
+			if (j != 0)
+			{
+				min_time = min(min_time, dp[j][i]);
+			}
 		}
-		result_path[j] = min_time;
+		if (j != 0)
+		{
+			result_path[j - 1] = min_time;
+		}
+		if (j == k)
+		{
+			result_path[j - 1] = dp[j - 1][j - 1];
+		}
 	}
 
 	return result_path;
