@@ -7,88 +7,97 @@ using namespace std;
 
 struct island
 {
-	int x;
-	int y;
-	long long t;
+	int x_cord;
+	int y_cord;
+	int research_time;
 };
 
-int abs_diff(const int x, const int y)
+vector<int> result;
+
+bool compareIslands(const island& a, const island& b)
 {
-	return (x > y) ? x - y : y - x;
+	// Sort by x_cord and then by y_cord
+	if (a.x_cord == b.x_cord)
+		return a.y_cord < b.y_cord;
+	return a.x_cord < b.x_cord;
 }
 
-vector<long long> min_sum_path(const vector<island>& islands, const int n, const int m, const int k)
+void new_main(const vector<island>& islands, const int n, const int m, const int k)
 {
-	// Create a 2D table to store intermediate results
-	vector dp(k + 1, vector<long long>(k + 1, INT32_MAX - 1));
+	result.resize(k + 1, INT32_MAX - 1);
+	result[0] = 0;
 
-	dp[0][0] = 0;
-
-	// Fill the table using tabulation
-	for (int i = 1; i <= n; ++i)
+	for (int i = 1; i <= k; ++i)
 	{
-		for (int j = 0; j <= k; ++j)
+		island current_island = islands[i - 1];
+		int current_x = current_island.x_cord;
+		int current_y = current_island.y_cord;
+
+		for (int j = 0; j < n / 2; ++j)
 		{
-			// Option 1: Move forward
-			auto left1 = dp[i][j];
-			auto right1 = dp[i - 1][j] + (abs_diff(islands[i].y, islands[i - 1].y) + 1) + islands[i - 1].t;
-			dp[i][j] = min(left1, right1);
+			// Calculate time for moving left and down:
+			island down_left = current_island;
+			down_left.x_cord--;
+			down_left.y_cord++;
+			down_left.research_time++;
 
-			// Option 2: Move backward
-			if (j > 0)
-			{
-				auto left2 = dp[i][j];
-				auto right2 = dp[i][j - 1] + (abs_diff(islands[i].y, islands[i - 1].y) + 1) + islands[i - 1].t;
-				dp[i][j] = min(left2, right2);
-			}
+			// Update the result for the new position
+			result[i] = min(result[i], down_left.research_time + result[i - 1] + 2);
 
-			// Option 3: Move upward if in the first or last column
-			if (j > 0 && (i == 1 || i == n))
-			{
-				auto left3 = dp[i][j];
-				auto right3 = dp[i - 1][j - 1] + (abs_diff(islands[i - 1].y, islands[i].y) + 1) + islands[i - 1].t;
-				dp[i][j] = min(left3, right3);
-			}
+			// Calculate time for moving down
+			island down = current_island;
+			down.y_cord++;
+			down.research_time++;
+
+			result[i] = min(result[i], down.research_time + result[i - 1] + 1);
+
+			// Calculate time for moving down and right
+			island down_right = current_island;
+			down_right.x_cord++;
+			down_right.y_cord++;
+			down_right.research_time++;
+
+			result[i] = min(result[i], down_right.research_time + result[i - 1] + 3);
+
+			// Calculate time for moving right
+			island right = current_island;
+			right.x_cord++;
+			right.research_time++;
+
+			result[i] = min(result[i], right.research_time + result[i - 1] + 1);
+
+			// Calculate time for moving left and up
+			island left_up = current_island;
+			left_up.x_cord--;
+			left_up.y_cord--;
+			left_up.research_time++;
+
+			result[i] = min(result[i], left_up.research_time + result[i - 1] + 4);
 		}
 	}
 
-	// Extract the result path
-	vector<long long> result_path(k);
-
-	for (int j = 1; j <= k; ++j) // Change here
+	for (int i = 1; i <= k; ++i)
 	{
-		long long min_time = INT32_MAX; // Change here
-		for (int i = 0; i <= n; ++i)
-		{
-			if (j != 0)
-			{
-				min_time = min(min_time, dp[j][i]);
-			}
-		}
-		if (j != 0)
-		{
-			result_path[j - 1] = min_time;
-		}
-		if (j == k)
-		{
-			result_path[j - 1] = dp[j - 1][j - 1];
-		}
+		cout << result[i] << " ";
 	}
-
-	return result_path;
+	cout << endl;
 }
 
-
-int main(int argc, char* argv[])
+int main(const int argc, char* argv[])
 {
-	ifstream input_file(argv[1]);
+	if (argc != 2)
+	{
+		cerr << "Usage: " << argv[0] << " <input_file>" << '\n';
+		return 1;
+	}
+
+	fstream input_file(argv[1]);
 	if (!input_file.is_open())
 	{
 		cerr << "Error opening the file!" << '\n';
 		return 1;
 	}
 
-	// Example usage
 	int n, m, k;
 	input_file >> n >> m >> k;
 
@@ -96,23 +105,13 @@ int main(int argc, char* argv[])
 	vector<island> islands(k);
 	for (int i = 0; i < k; ++i)
 	{
-		input_file >> islands[i].x >> islands[i].y >> islands[i].t;
+		input_file >> islands[i].x_cord >> islands[i].y_cord >> islands[i].research_time;
 	}
 
-	// Check if vector islands has enough elements
-	if (islands.size() < k)
-	{
-		cerr << "Error: Insufficient elements in the islands vector." << '\n';
-		return 1;
-	}
+	// Sort the islands
+	sort(islands.begin(), islands.end(), compareIslands);
 
-	// Calculate the minimum sum path using tabulation
-
-	// Output the result path
-	for (const vector<long long> result_path = min_sum_path(islands, n, m, k); const long long time : result_path)
-	{
-		cout << time << " ";
-	}
+	new_main(islands, n, m, k);
 
 	return 0;
 }

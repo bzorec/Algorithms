@@ -134,6 +134,10 @@
     <Text Include="..\..\test.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
+    <Text Include="..\x64\Debug\testni_primer1.txt" />
+    <Text Include="..\x64\Debug\testni_primer2.txt" />
+    <Text Include="..\x64\Debug\testni_primer3.txt" />
+    <Text Include="hardcode.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

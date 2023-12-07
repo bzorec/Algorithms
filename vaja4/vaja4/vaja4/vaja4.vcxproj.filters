@@ -23,5 +23,15 @@
     <Text Include="..\..\test.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="..\x64\Debug\testni_primer1.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\x64\Debug\testni_primer2.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\x64\Debug\testni_primer3.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="hardcode.txt" />
   </ItemGroup>
 </Project>
